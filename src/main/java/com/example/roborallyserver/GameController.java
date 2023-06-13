@@ -1,7 +1,11 @@
 package com.example.roborallyserver;
 
+import com.google.gson.GsonBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.google.gson.Gson;
+import java.io.FileWriter;
+import java.io.IOException;
 
 
 @RestController
@@ -17,7 +21,14 @@ public class GameController {
     @PostMapping("/saveGame/{name}")
     public ResponseEntity<String> saveGame(@PathVariable String name, @RequestBody String boardTemplate) {
         // process the action and return the new game stat
-        // e
+        // e;
+        String jsonBoardTemplate = null;
+
+        String filename = "saveGame/";
+        boardTemplate  = jsonBoardTemplate;
+        Gson gson = new Gson();
+        gson.toJson(boardTemplate);
+
 
         return ResponseEntity.ok("ok");
     }
