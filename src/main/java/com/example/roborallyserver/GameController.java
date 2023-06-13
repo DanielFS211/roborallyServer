@@ -30,7 +30,7 @@ public class GameController {
     }
 
     @PostMapping("/newGame")
-    public ResponseEntity<String> newGame (@PathVariable string name, @RequestBody string boardTemplate){
+    public ResponseEntity<String> newGame (@PathVariable String name, @RequestBody String boardTemplate){
 
         return ResponseEntity.ok("Starting Game");
     }
