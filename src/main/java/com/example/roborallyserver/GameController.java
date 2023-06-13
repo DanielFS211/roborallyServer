@@ -24,13 +24,19 @@ public class GameController {
 
     @GetMapping("/loadGame")
     public ResponseEntity<String> loadGame(@RequestBody String name) {
-        // process the action and return the new game stat
-        // e
+        // process the action and return the new game state
 
         return ResponseEntity.ok("JSONFIL");
     }
-}
 
+    @PostMapping("/newGame")
+    public ResponseEntity<String> newGame (@PathVariable string name, @RequestBody string boardTemplate){
+
+        return ResponseEntity.ok("Starting Game");
+    }
+
+
+}
 
 
  /*   @PostMapping("/game/start")
