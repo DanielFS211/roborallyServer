@@ -1,11 +1,10 @@
 package com.example.roborallyserver;
 
-import com.google.gson.GsonBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.google.gson.Gson;
-import java.io.FileWriter;
-import java.io.IOException;
+
+import java.util.List;
 
 
 @RestController
@@ -16,39 +15,56 @@ public class GameController {
     public GameController() {
     }
 
+    @Autowired
+    private ISaveService saveService;
 
-
-    @PostMapping("/saveGame/{name}")
-    public ResponseEntity<String> saveGame(@PathVariable String name, @RequestBody String boardTemplate) {
-        // process the action and return the new game stat
-        // e;
-        String jsonBoardTemplate = null;
-
-        String filename = "saveGame/";
-        boardTemplate  = jsonBoardTemplate;
-        Gson gson = new Gson();
-        gson.toJson(boardTemplate);
-
-
+    //Works.
+    @PutMapping("/saves/{name}")
+    public ResponseEntity<String> saveGame(@PathVariable String name, @RequestBody String jsonBoardTemplateString) {
+        boolean added = saveService.updateSave(name, jsonBoardTemplateString);
         return ResponseEntity.ok("ok");
     }
 
-    @GetMapping("/loadGame")
-    public ResponseEntity<String> loadGame(@RequestBody String name) {
+    //Works.
+    @GetMapping("/saves/{name}")
+    public ResponseEntity<String> loadGame(@PathVariable String name) {
         // process the action and return the new game state
-
-        return ResponseEntity.ok("JSONFIL");
+        String save = saveService.loadGame(name);
+//        Gson gson = new Gson();
+//        gson.toJson(save);
+        return ResponseEntity.ok().body(save);
     }
 
-    @PostMapping("/newGame")
-    public ResponseEntity<String> newGame (@PathVariable String name, @RequestBody String boardTemplate){
-
-        return ResponseEntity.ok("Starting Game");
+    //Test, works.
+    @GetMapping(value = "/saves")
+    public ResponseEntity<List<Save>> getSaves() {
+        List<Save> saves = saveService.findAll();
+        return ResponseEntity.ok().body(saves);
     }
 
+
+    @PostMapping("/saves/{name}")
+    public ResponseEntity<String> newGame(@PathVariable String name, @RequestBody String jsonBoardTemplateString) {
+        // process the action and return the new game stat
+        // A SAVE IS it's own class and not a string. fix this
+        // e;
+//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//        gson.toJson(jsonBoardTemplateString);
+
+        boolean added = saveService.newGame(name, jsonBoardTemplateString);
+//        String jsonBoardTemplate = null;
+//        String ba = "saves/";
+//        s.toString()  = jsonBoardTemplate;
+
+        return ResponseEntity.ok("ok");
+    }
+    @DeleteMapping("/saves")
+    public ResponseEntity<String> deleteSave(@RequestParam(value = "name") String name) {
+        saveService.deleteSave(name);
+        return ResponseEntity.ok().body("deleted");
+    }
 
 }
-
 
  /*   @PostMapping("/game/start")
     public ResponseEntity<GameState> startGame(@RequestBody GameStartRequest request) {
