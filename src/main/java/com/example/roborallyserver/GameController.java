@@ -6,97 +6,69 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+/**
+ * The GameController is a REST controller that handles HTTP requests and "wires" them to the appropiate
+ * methods in save service.
+ */
 @RestController
-//@RequestMapping("/api")
 public class GameController {
-    private RoboRallyLogic roboRallyLogic;  // your game logic goes here
-
     public GameController() {
     }
 
     @Autowired
     private ISaveService saveService;
 
-    //Works.
+    /**
+     * Updates a game save with the specified name.
+     * @param name The name of the game save to update.
+     * @param jsonBoardTemplateString The JSON string representing the updated board template.
+     * @return Returns a response indicating the success of the operation.
+     */
     @PutMapping("/saves/{name}")
     public ResponseEntity<String> saveGame(@PathVariable String name, @RequestBody String jsonBoardTemplateString) {
         boolean added = saveService.updateSave(name, jsonBoardTemplateString);
         return ResponseEntity.ok("ok");
     }
 
-    //Works.
+    /**
+     * Loads a game save with the specified name.
+     * @param name The name of the game save to load.
+     * @return Returns a response containing the loaded game save as a string.
+     */
     @GetMapping("/saves/{name}")
     public ResponseEntity<String> loadGame(@PathVariable String name) {
-        // process the action and return the new game state
         String save = saveService.loadGame(name);
-//        Gson gson = new Gson();
-//        gson.toJson(save);
         return ResponseEntity.ok().body(save);
     }
-
-    //Test, works.
+    /**
+     * Retrieves all the saves.
+     * @return Returns a list of all the save files.
+     */
     @GetMapping(value = "/saves")
     public ResponseEntity<List<Save>> getSaves() {
         List<Save> saves = saveService.findAll();
         return ResponseEntity.ok().body(saves);
     }
-
-
+    /**
+     * Creates a new game save with the specified name and board template.
+     * @param name The name of the game save.
+     * @param jsonBoardTemplateString The JSON string representing the board template.
+     * @return Returns a response indicating the success of the operation.
+     */
     @PostMapping("/saves/{name}")
     public ResponseEntity<String> newGame(@PathVariable String name, @RequestBody String jsonBoardTemplateString) {
-        // process the action and return the new game stat
-        // A SAVE IS it's own class and not a string. fix this
-        // e;
-//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//        gson.toJson(jsonBoardTemplateString);
-
         boolean added = saveService.newGame(name, jsonBoardTemplateString);
-//        String jsonBoardTemplate = null;
-//        String ba = "saves/";
-//        s.toString()  = jsonBoardTemplate;
-
         return ResponseEntity.ok("ok");
     }
+    /**
+     * Deletes a game save with the specified name.
+     * @param name The name of the game save to be deleted.
+     * @return Returns a response indicating the success of the operation.
+     */
     @DeleteMapping("/saves")
     public ResponseEntity<String> deleteSave(@RequestParam(value = "name") String name) {
         saveService.deleteSave(name);
         return ResponseEntity.ok().body("deleted");
     }
-
 }
-
- /*   @PostMapping("/game/start")
-    public ResponseEntity<GameState> startGame(@RequestBody GameStartRequest request) {
-        GameState gameState = gameService.startNewGame(request.getNumberOfPlayers(), request.getGameBoardName());
-        return ResponseEntity.ok(gameState);
-    }
-
-    public class GameStartRequest {
-        private int numberOfPlayers;
-        private String gameBoardName;
-        // getters and setters...
-    }
-
-
-    @PostMapping("/game/save")
-    public ResponseEntity<String> saveGame(@RequestBody GameState gameState) {
-        gameService.saveGame(gameState);
-        return ResponseEntity.ok("Game saved successfully");
-    }
-
-
-    @GetMapping("/game/load/{saveId}")
-    public ResponseEntity<GameState> loadGame(@PathVariable String saveId) {
-        GameState gameState = gameService.loadGame(saveId);
-        return ResponseEntity.ok(gameState);
-    }
-
-    @DeleteMapping("/game/stop")
-    public ResponseEntity<String> stopGame() {
-        gameService.stopGame();
-        return ResponseEntity.ok("Game stopped successfully");
-    }*/
-
-
 
